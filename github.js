@@ -1,40 +1,23 @@
 var request = require('request');
 
-function createOptions(username, repo) {
-  return {
-    url: 'https://api.github.com/repos/' + username + '/' + repo + '/commits',
-    headers: {
-      'Authorization': 'token 164457e327f031273634df309b970909d800d8ff', // Bens access token
-      'user-agent': 'Klipfolio-Decode-2016-Fall'
-    }
-  };
+var options = {
+  url: 'https://api.github.com/repos/BenEmdon/Tic-Tac-Toe/commits',
+  headers: {
+    'Authorization': 'token c5ea196043d861110c0d6364105002776ac67105',
+    'user-agent': 'Klipfolio-Decode-2016'
+  }
+};
+
+function callback(error, response, body) {
+  console.log("entered callback");
+  console.log(JSON.stringify(response));
+  if (!error && response.statusCode == 200) {
+    var info = JSON.parse(body);
+    console.log(JSON.stringify(info, null, '  '));
+    console.log(info[0].commit.author.name);
+  }
 }
-
-var queryGitHub = function(username, repo, callback) {
-  var options = createOptions(username, repo);
-
-  request(options, function(error, response, body) {
-    if (!error && response.statusCode == 200) {
-      var list = [];
-      var info = JSON.parse(body);
-
-      for(var i = 0; i < info.length; i++) {
-        list.push([{
-          time: new Date(info[i].commit.committer.date).getTime(),
-          value: 1
-        }, {
-          author: info[i].commit.author.name,
-        }])
-      }
-      console.log(JSON.stringify(list, null, '  '));
-      callback(list);
-
-    } else if (!error) {
-      console.log("body: " + JSON.stringify(response, null, '  '));
-    } else {
-      console.error(error);
-    }
-  });
+module.exports.makeReq = function() {
+  console.log("entered function");
+  request(options, callback);
 }
-
-module.exports.queryGitHub = queryGitHub;
