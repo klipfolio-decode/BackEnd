@@ -9,8 +9,16 @@ var client = influx({
   host: 'localhost',
   port: 8086,
   protocol: 'http',
-  database: 'mydb'
+  database: 'github'
 })
+
+var insertDB= function(messurment,list)
+{
+  //ribaz
+  client.writePoints(messurment,  list);
+
+
+}
 
 
 module.exports.getData = function(measurement, start, end, callback){
@@ -20,3 +28,5 @@ module.exports.getData = function(measurement, start, end, callback){
     callback(results);
   });
 }
+
+module.exports.insertDB=insertDB;
