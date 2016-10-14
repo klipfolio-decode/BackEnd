@@ -7,7 +7,7 @@ var model = require('./query.js');
 var result;
 var app = express();
 app.use(bodyParser.json());
-app.get('/',controller.retrieveData);
+app.get('/',controller.getData);
 app.get('/data/:datasource/:type',controller.getData);
 app.get('/sample_data',controller.sampleData);
 app.listen(8080);
