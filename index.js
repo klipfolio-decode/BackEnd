@@ -1,5 +1,4 @@
 const express = require('express');
-const influx = require('influx');
 const bodyParser = require('body-parser');
 
 var controller = require('./controllers/main_controller.js');
