@@ -16,8 +16,6 @@ var insertDB= function(messurment,list)
 {
   //ribaz
   client.writePoints(messurment,  list);
-
-
 }
 
 
