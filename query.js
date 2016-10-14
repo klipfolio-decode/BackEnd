@@ -9,19 +9,14 @@ var client = influx({
   host: 'localhost',
   port: 8086,
   protocol: 'http',
-  database: 'github'
+  database: 'mydb'
 })
 
 
+module.exports.getData = function(measurement, start, end, callback){
+  var query = 'SELECT sum(value) FROM '+ measurement + ' WHERE time > now() - 30d and time < now() group by time(1d)';
 
-function selectDB(messurment)
-{
-
-  var query = 'SELECT * FROM '+messurment;
-  client.query("github", query, function (err, results) {
-     console.log(results);
-
-   })
-
-
+  var output = client.query("mydb", query, function (err, results) {
+    callback(results);
+  });
 }

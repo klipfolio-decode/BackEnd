@@ -1,8 +1,10 @@
-const moment = require('moment');
 
+const moment = require('moment');
+var model = require('../query.js');
 module.exports.getData = function(req, res){
     var datasource = req.params.datasource;
     var type = req.params.type;
+
     console.log('datasource: ' + datasource + ' type: ' + type);
     res.status(200).json({'error':null, 'data':'test data'});
 
@@ -18,3 +20,12 @@ module.exports.sampleData = function(req, res){
                     ]}
     res.status(200).json(data);
 };
+
+module.exports.retrieveData = function (req,res){
+  var measurement = 'cpu';
+  var start = 0;
+  var end = 1476461799665512196;
+  model.getData(measurement,start,end,function(results) {
+      res.status(200).json(results);
+  });
+}
