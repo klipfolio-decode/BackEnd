@@ -4,13 +4,14 @@ function createOptions(username, repo) {
   return {
     url: 'https://api.github.com/repos/' + username + '/' + repo + '/commits',
     headers: {
-      'Authorization': 'token 164457e327f031273634df309b970909d800d8ff', // Bens access token
+      'Authorization': 'token 2376e01358d25514cda74aec178a2573c849fcaa', // Bens access token
       'user-agent': 'Klipfolio-Decode-2016-Fall'
     }
   };
 }
 
 var queryGitHub = function(username, repo, callback) {
+
   var options = createOptions(username, repo);
 
   request(options, function(error, response, body) {
