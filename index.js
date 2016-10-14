@@ -9,7 +9,9 @@ var app = express();
 app.use(bodyParser.json());
 
 app.get('/',function(req,res){
-  github.makeReq();
+  github.queryGitHub('BenEmdon', 'PocketMoney', function(list) {
+
+  });
   res.send('Hello World');
 });
 
