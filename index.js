@@ -11,4 +11,6 @@ app.get('/',function(req,res){
 });
 
 app.get('/data/:datasource/:type',controller.getData);
+app.get('/sample_data',controller.sampleData);
 app.listen(8080);
+
