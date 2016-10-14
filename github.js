@@ -10,25 +10,6 @@ function createOptions(username, repo) {
   };
 }
 
-function callback(error, response, body) {
-  if (!error && response.statusCode == 200) {
-    var list = [];
-    var info = JSON.parse(body);
-
-    for(var i = 0; i < info.length; i++) {
-      list.push({
-        author:info[i].commit.author.name,
-        date:info[i].commit.committer.date
-      })
-    }
-    console.log(JSON.stringify(list, null, '  '));
-  } else if (!error) {
-    console.log("body: " + JSON.stringify(response, null, '  '));
-  } else {
-    console.error(error);
-  }
-}
-
 var queryGitHub = function(username, repo, callback) {
   var options = createOptions(username, repo);
 
