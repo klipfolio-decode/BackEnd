@@ -11,5 +11,9 @@
     "#klipfolio"
   ],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.0",
+    "influx": "^4.2.3"
+  }
 }
