@@ -1,7 +1,5 @@
-
-
 var influx = require('influx')
-
+var github = require('./github.js');
 
 var client = influx({
 
@@ -12,19 +10,35 @@ var client = influx({
   database: 'github'
 })
 
-var insertDB= function(messurment,list)
+
+var insertDB= function(messurment, list)
 {
   //ribaz
   client.writePoints(messurment,  list);
 }
 
+module.exports.getData = function(measurement, start, end, res, callback){
+  var query = 'SELECT sum(value) FROM '+ measurement + ' WHERE time > now() - 30d and time < now() group by time(1d) fill(0)';
 
-module.exports.getData = function(measurement, start, end, callback){
-  var query = 'SELECT sum(value) FROM '+ measurement + ' WHERE time > now() - 30d and time < now() group by time(1d)';
+  github.queryGitHub('docker', 'docker', function(list) {
 
-  var output = client.query("mydb", query, function (err, results) {
-    callback(results);
+    client.writePoints(measurement, list, function(err) {
+
+      if(!err) {
+        client.query("github", query, function (err, results) {
+
+          console.log(JSON.stringify(results, null, '  '));
+          if(!err) {
+            callback(results); // from the initaial param
+          } else {
+            console.error(err);
+            res.status(500).json(err);
+          }
+        });
+      } else {
+        console.error(err);
+        res.status(500).json(err);
+      }
+    });
   });
 }
-
-module.exports.insertDB=insertDB;
