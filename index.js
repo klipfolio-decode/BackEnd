@@ -12,7 +12,7 @@ app.get('/',controller.retrieveData);
 
 app.get('/git',function(req,res){
   github.queryGitHub('BenEmdon', 'PocketMoney', function(list) {
-      query.insertDB("commit",list);
+      model.insertDB("commit", list);
   });
   res.send('Hello World');
 });

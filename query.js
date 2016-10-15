@@ -9,13 +9,15 @@ var client = influx({
   host: 'localhost',
   port: 8086,
   protocol: 'http',
-  database: 'mydb'
+  database: 'github'
 })
 
 var insertDB= function(messurment,list)
 {
-
+  //ribaz
   client.writePoints(messurment,  list);
+
+
 }
 
 
