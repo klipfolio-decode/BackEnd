@@ -10,13 +10,6 @@ var client = influx({
   database: 'github'
 })
 
-
-var insertDB= function(messurment, list)
-{
-  //ribaz
-  client.writePoints(messurment,  list);
-}
-
 module.exports.getData = function(measurement, start, end, interval, res, callback){
   var query = 'SELECT sum(value) FROM '+ measurement + ' WHERE time >= ' + start + ' and time <= ' + end + ' group by time(' + interval + ') fill(0)';
 
