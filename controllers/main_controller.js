@@ -38,10 +38,14 @@ module.exports.retrieveData = function (req,res){
 
       var filters ={};
       var requiredFilters = schema.datasources[datasource].measurements[measurement].filter.required;
+      var optionalFilters = schema.datasources[datasource].measurements[measurement].filter.optional;
       for(var i = 0; i<requiredFilters.length; i++)
       {
           filters[requiredFilters[i]] = req.query[requiredFilters[i]];
-          // filters.push({filter:requiredFilters[i], value:req.query[requiredFilters[i]]});
+      }
+      for(var i = 0; i<optionalFilters.length; i++)
+      {
+        filters[optionalFilters[i]] = req.query[optionalFilters[i]];
       }
         console.log(filters);
     model.getData(datasource,measurement, start, end, interval,filters, function(err,results) {
