@@ -14,19 +14,22 @@ var client = influx({
 module.exports.getData = function(measurement, start, end, interval, callback){
   var query = 'SELECT sum(value) FROM '+ measurement + ' WHERE time >= ' + start + '000000000 and time <= ' + end + '000000000 group by time(' + interval + ') fill(0)';
   console.log(query);
-  github.queryGitHub('robbyrussell', 'oh-my-zsh', function(list) {
+  github.queryGitHub('robbyrussell', 'oh-my-zsh', function(err, list) {
 
-    client.writePoints(measurement, list, function(err) {
+    if (!err) {
+      client.writePoints(measurement, list, function(err) {
 
-      if(!err) {
-        client.query("github", query, function (err, results) {
-          console.log('=========');
-          console.log(JSON.stringify(results, null, '  '));
-          callback(err, results)
-        });
-      } else {
-        callback(err);
-      }
-    });
+        if(!err) {
+          client.query("github", query, function (err, results) {
+            console.log(JSON.stringify(results, null, '  '));
+            callback(err, results)
+          });
+        } else {
+          callback(err);
+        }
+      });
+    } else {
+      callback(err);
+    }
   });
 }
