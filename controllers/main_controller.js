@@ -23,9 +23,9 @@ module.exports.retrieveData = function (req,res){
     var datasource = req.params.datasource;
     var measurement = req.params.measurement;
 
-    var start = req.query.start;
-    var end = req.query.end;
-    var interval = req.query.interval;
+    var start = 1475419531;
+    var end = 1476543246;
+    var interval = "1d";
 
   model.getData(measurement, start, end, interval, function(err,results) {
     if(err) {
