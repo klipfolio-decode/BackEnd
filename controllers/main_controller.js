@@ -36,7 +36,15 @@ module.exports.retrieveData = function (req,res){
     var interval = req.query.interval;
     var analysisType = req.query.analysis;
 
-    model.getData(measurement, start, end, interval, function(err,results) {
+      var filters ={};
+      var requiredFilters = schema.datasources[datasource].measurements[measurement].filter.required;
+      for(var i = 0; i<requiredFilters.length; i++)
+      {
+          filters[requiredFilters[i]] = req.query[requiredFilters[i]];
+          // filters.push({filter:requiredFilters[i], value:req.query[requiredFilters[i]]});
+      }
+        console.log(filters);
+    model.getData(datasource,measurement, start, end, interval,filters, function(err,results) {
       if(err) {
         res.status(400).json({error : err, data : null});
       } else {
