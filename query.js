@@ -17,8 +17,8 @@ var insertDB= function(messurment, list)
   client.writePoints(messurment,  list);
 }
 
-module.exports.getData = function(measurement, start, end, res, callback){
-  var query = 'SELECT sum(value) FROM '+ measurement + ' WHERE time > now() - 30d and time < now() group by time(1d) fill(0)';
+module.exports.getData = function(measurement, start, end, interval, res, callback){
+  var query = 'SELECT sum(value) FROM '+ measurement + ' WHERE time >= ' + start + ' and time <= ' + end + ' group by time(' + interval + ') fill(0)';
 
   github.queryGitHub('robbyrussell', 'oh-my-zsh', function(list) {
 
