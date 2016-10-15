@@ -7,15 +7,7 @@ var model = require('./query.js');
 var result;
 var app = express();
 app.use(bodyParser.json());
-app.get('/',controller.retrieveData);
-
-app.get('/git',function(req,res){
-  github.queryGitHub('BenEmdon', 'PocketMoney', function(list) {
-      model.insertDB("commit", list);
-  });
-
-  res.send('Hello World');
-});
+app.get('/hardcoded-data', controller.retrieveData);
 
 app.get('/data/:datasource/:type',controller.getData);
 app.get('/sample_data',controller.sampleData);
