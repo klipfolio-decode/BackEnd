@@ -20,10 +20,15 @@ module.exports.sampleData = function(req, res){
 };
 
 module.exports.retrieveData = function (req,res){
-  var measurement = 'commit';
-  var start = 0;
-  var end = 1476461799665512196;
-  model.getData(measurement, start, end, res, function(results) {
+    var datasource = req.params.datasource;
+    var measurement = req.params.measurement;
+
+    var measurement = req.query.measurement;;
+    var start = req.query.start;
+    var end = req.query.end;
+    var interval = req.query.interval;
+
+  model.getData(measurement, start, end, interval, res, function(results) {
       res.status(200).json(results);
   });
 }

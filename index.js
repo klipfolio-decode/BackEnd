@@ -17,6 +17,6 @@ app.get('/git',function(req,res){
   res.send('Hello World');
 });
 
-app.get('/data/:datasource/:type',controller.getData);
+app.get('/data/:datasource/:measurement',controller.retrieveData);
 app.get('/sample_data',controller.sampleData);
 app.listen(8080);
