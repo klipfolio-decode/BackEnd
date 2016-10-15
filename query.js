@@ -12,6 +12,12 @@ var client = influx({
   database: 'mydb'
 })
 
+var insertDB= function(messurment,list)
+{
+
+  client.writePoints(messurment,  list);
+}
+
 
 module.exports.getData = function(measurement, start, end, callback){
   var query = 'SELECT sum(value) FROM '+ measurement + ' WHERE time > now() - 30d and time < now() group by time(1d)';
@@ -20,3 +26,5 @@ module.exports.getData = function(measurement, start, end, callback){
     callback(results);
   });
 }
+
+module.exports.insertDB=insertDB;
