@@ -1,6 +1,6 @@
 var shaman = require('shaman');
 
-module.exports.linearRegression = function(list){
+module.exports.linearRegression = function(list, res){
   // console.log(realData[0].data[1].data);
   var parsedValues = [];
   var parsedDates = [];
@@ -31,6 +31,9 @@ module.exports.linearRegression = function(list){
           });
     }
     console.log(output);
+
+    console.log("return analysis result");
+    res.status(200).json(output);
+
   });
-  res.status(200).json(output);
 };

@@ -1,5 +1,7 @@
 var model = require('../query.js');
 var schema = require('../schema.js');
+var analysis = require("../analysis.js");
+
 module.exports.getData = function(req, res){
     var datasource = req.params.datasource;
     var type = req.params.type;
@@ -27,6 +29,7 @@ module.exports.retrieveData = function (req,res){
     var start = req.query.start;
     var end = req.query.end;
     var interval = req.query.interval;
+    var analysisType = req.query.analysis;
 
   model.getData(measurement, start, end, interval, function(err,results) {
     if(err) {
@@ -38,7 +41,13 @@ module.exports.retrieveData = function (req,res){
       for(var i = 0; i< array.length; ++i){
           formattedResult.push({'time': new Date(array[i].time).getTime(), 'data' :array[i].sum});
       }
-      res.status(200).json({'error' : err, 'data' : formattedResult});
+      if (analysisType == "lr") {
+        console.log("start analysis");
+        analysis.linearRegression(formattedResult, res);
+      } else {
+        res.status(200).json({'error' : err, 'data' : formattedResult});
+      }
+
     }
   });
 }
