@@ -1,5 +1,6 @@
 var influx = require('influx')
 var github = require('./github.js');
+var moment = require('moment');
 
 var client = influx({
 
@@ -11,17 +12,18 @@ var client = influx({
 })
 
 module.exports.getData = function(measurement, start, end, interval, res, callback){
-  var query = 'SELECT sum(value) FROM '+ measurement + ' WHERE time >= ' + start + ' and time <= ' + end + ' group by time(' + interval + ') fill(0)';
-
+  var query = 'SELECT sum(value) FROM '+ measurement + ' WHERE time >= ' + start + '000000000 and time <= ' + end + '000000000 group by time(' + interval + ') fill(0)';
+  console.log(query);
   github.queryGitHub('robbyrussell', 'oh-my-zsh', function(list) {
 
     client.writePoints(measurement, list, function(err) {
 
       if(!err) {
         client.query("github", query, function (err, results) {
-
-          // console.log(JSON.stringify(results, null, '  '));
+          console.log('=========');
+          console.log(JSON.stringify(results, null, '  '));
           if(!err) {
+            console.log('0000000000');
             callback(results); // from the initaial param
           } else {
             console.error(err);

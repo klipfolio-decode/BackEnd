@@ -23,7 +23,6 @@ module.exports.retrieveData = function (req,res){
     var datasource = req.params.datasource;
     var measurement = req.params.measurement;
 
-    var measurement = req.query.measurement;;
     var start = req.query.start;
     var end = req.query.end;
     var interval = req.query.interval;

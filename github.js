@@ -4,7 +4,7 @@ function createOptions(username, repo) {
   return {
     url: 'https://api.github.com/repos/' + username + '/' + repo + '/commits',
     headers: {
-      'Authorization': 'token 2376e01358d25514cda74aec178a2573c849fcaa', // Bens access token
+      'Authorization': 'token 63b2aa1b77068e91fe8ab245bea1572acc024fd9', // Bens access token
       'user-agent': 'Klipfolio-Decode-2016-Fall'
     }
   };
