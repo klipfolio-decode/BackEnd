@@ -10,5 +10,6 @@ app.use(bodyParser.json());
 app.get('/hardcoded-data', controller.retrieveData);
 
 app.get('/data/:datasource/:measurement',controller.retrieveData);
+app.get('/data', controller.datasources);
 app.get('/sample_data',controller.sampleData);
 app.listen(8080);
