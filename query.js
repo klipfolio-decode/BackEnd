@@ -28,7 +28,7 @@ function getGithubData(measurement, start, end, interval,filters, callback,clien
 
   var query = 'SELECT sum(value) FROM ' + measurement + ' WHERE time >= ' + start + '000000000 and time <= ' + end + '000000000 '+ filterQuery+'group by time(' + interval + ') fill(0)';
   console.log(query);
-  github.queryGitHub(filters['repo'], function(err, list) {
+  github.queryGitHub(measurement, filters['repo'], function(err, list) {
     if (!err) {
       client.writePoints(measurement, list, function(err) {
 

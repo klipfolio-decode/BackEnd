@@ -45,10 +45,12 @@ module.exports.retrieveData = function (req,res){
       }
       for(var i = 0; i<optionalFilters.length; i++)
       {
-        filters[optionalFilters[i]] = req.query[optionalFilters[i]];
+        if (req.query[optionalFilters[i]]) {
+          filters[optionalFilters[i]] = req.query[optionalFilters[i]];
+        }
       }
         console.log(filters);
-    model.getData(datasource,measurement, start, end, interval,filters, function(err,results) {
+    model.getData(datasource, measurement, start, end, interval,filters, function(err,results) {
       if(err) {
         res.status(400).json({error : err, data : null});
       } else {
