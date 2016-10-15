@@ -1,6 +1,5 @@
-module.exports.datasources = [
-  {
-    datasource: 'github',
+module.exports.datasources = {
+  github: {
     measurements: [
       {
         name: 'commit',
@@ -16,4 +15,4 @@ module.exports.datasources = [
       }
     ]
   }
-]
+}
