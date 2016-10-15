@@ -30,7 +30,7 @@ var queryGitHub = function(username, repo, callback) {
       console.log(JSON.stringify(list, null, '  '));
       callback(list);
     } else if (!error) {
-      console.error();("body: " + JSON.stringify(response, null, '  '));
+      console.error("body: " + JSON.stringify(response, null, '  '));
     } else {
       console.error(error);
     }
