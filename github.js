@@ -1,9 +1,9 @@
 var request = require('request');
 var config = require('./config.js');
 
-function createOptions(username, repo) {
+function createOptions(repo) {
   return {
-    url: 'https://api.github.com/repos/' + username + '/' + repo + '/commits',
+    url: 'https://api.github.com/repos/' + repo + '/commits',
     headers: {
       'Authorization': 'token ' + config.githubKey, // Bens access token
       'user-agent': 'Klipfolio-Decode-2016-Fall'
@@ -11,9 +11,9 @@ function createOptions(username, repo) {
   };
 }
 
-var queryGitHub = function(username, repo, callback) {
+var queryGitHub = function(repo, callback) {
 
-  var options = createOptions(username, repo);
+  var options = createOptions(repo);
 
   request(options, function(error, response, body) {
     if (!error && response.statusCode == 200) {

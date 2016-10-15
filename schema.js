@@ -4,7 +4,6 @@ module.exports.datasources = {
       commit: {
         filter: {
           required: [
-            'username',
             'repo'
           ],
           optional: [
