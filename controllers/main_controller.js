@@ -23,12 +23,21 @@ module.exports.retrieveData = function (req,res){
     var datasource = req.params.datasource;
     var measurement = req.params.measurement;
 
-    var measurement = req.query.measurement;;
     var start = req.query.start;
     var end = req.query.end;
     var interval = req.query.interval;
 
-  model.getData(measurement, start, end, interval, res, function(results) {
-      res.status(200).json(results);
+  model.getData(measurement, start, end, interval, function(err,results) {
+    if(err) {
+      res.status(400).json({'error' : err, 'data' : null});
+    } else {
+
+      formattedResult = [];
+      var array = results[0];
+      for(var i = 0; i< array.length; ++i){
+          formattedResult.push({'time': new Date(array[i].time).getTime(), 'data' :array[i].sum});
+      }
+      res.status(200).json({'error' : err, 'data' : formattedResult});
+    }
   });
 }
