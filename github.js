@@ -1,10 +1,11 @@
 var request = require('request');
+var config = require('./config.js');
 
 function createOptions(username, repo) {
   return {
     url: 'https://api.github.com/repos/' + username + '/' + repo + '/commits',
     headers: {
-      'Authorization': 'token 63b2aa1b77068e91fe8ab245bea1572acc024fd9', // Bens access token
+      'Authorization': 'token ' + config.githubKey, // Bens access token
       'user-agent': 'Klipfolio-Decode-2016-Fall'
     }
   };
@@ -27,7 +28,7 @@ var queryGitHub = function(username, repo, callback) {
           repo: repo
         }])
       }
-      console.log(JSON.stringify(list, null, '  '));
+      // console.log(JSON.stringify(list, null, '  '));
       callback(list);
     } else if (!error) {
       console.error("body: " + JSON.stringify(response, null, '  '));

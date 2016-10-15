@@ -11,7 +11,7 @@ var client = influx({
   database: 'github'
 })
 
-module.exports.getData = function(measurement, start, end, interval, res, callback){
+module.exports.getData = function(measurement, start, end, interval, callback){
   var query = 'SELECT sum(value) FROM '+ measurement + ' WHERE time >= ' + start + '000000000 and time <= ' + end + '000000000 group by time(' + interval + ') fill(0)';
   console.log(query);
   github.queryGitHub('robbyrussell', 'oh-my-zsh', function(list) {
@@ -22,17 +22,10 @@ module.exports.getData = function(measurement, start, end, interval, res, callba
         client.query("github", query, function (err, results) {
           console.log('=========');
           console.log(JSON.stringify(results, null, '  '));
-          if(!err) {
-            console.log('0000000000');
-            callback(results); // from the initaial param
-          } else {
-            console.error(err);
-            res.status(500).json(err);
-          }
+          callback(err, results)
         });
       } else {
-        console.error(err);
-        res.status(500).json(err);
+        callback(err);
       }
     });
   });
