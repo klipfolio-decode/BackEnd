@@ -1,4 +1,5 @@
 var model = require('../query.js');
+var schema = require('../schema.js');
 module.exports.getData = function(req, res){
     var datasource = req.params.datasource;
     var type = req.params.type;
@@ -41,3 +42,7 @@ module.exports.retrieveData = function (req,res){
     }
   });
 }
+
+module.exports.datasources = function(req, res) {
+  res.status(200).json({error: null, data: schema.datasources})
+};
