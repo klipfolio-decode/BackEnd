@@ -1,8 +1,7 @@
 module.exports.datasources = {
   github: {
-    measurements: [
-      {
-        name: 'commit',
+    measurements: {
+      commit: {
         filter: {
           required: [
             'username',
@@ -13,6 +12,6 @@ module.exports.datasources = {
           ]
         }
       }
-    ]
+    }
   }
 }
