@@ -20,14 +20,14 @@ var insertDB= function(messurment, list)
 module.exports.getData = function(measurement, start, end, res, callback){
   var query = 'SELECT sum(value) FROM '+ measurement + ' WHERE time > now() - 30d and time < now() group by time(1d) fill(0)';
 
-  github.queryGitHub('docker', 'docker', function(list) {
+  github.queryGitHub('robbyrussell', 'oh-my-zsh', function(list) {
 
     client.writePoints(measurement, list, function(err) {
 
       if(!err) {
         client.query("github", query, function (err, results) {
 
-          console.log(JSON.stringify(results, null, '  '));
+          // console.log(JSON.stringify(results, null, '  '));
           if(!err) {
             callback(results); // from the initaial param
           } else {
