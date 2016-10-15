@@ -20,7 +20,6 @@ module.exports.getData = function(measurement, start, end, interval, callback){
 
       if(!err) {
         client.query("github", query, function (err, results) {
-          console.log('=========');
           console.log(JSON.stringify(results, null, '  '));
           callback(err, results)
         });
