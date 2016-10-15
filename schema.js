@@ -10,7 +10,7 @@ module.exports.datasources = {
             'author'
           ]
         }
-      }
+      },
       commit: {
         filter: {
           required: [

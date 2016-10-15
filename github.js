@@ -11,7 +11,7 @@ function createOptions(repo) {
   };
 }
 
-var queryGitHub = function(repo, callback) {
+var queryGitHub = function(measurement, repo, callback) {
 
   var options = createOptions(repo);
 
@@ -22,7 +22,7 @@ var queryGitHub = function(repo, callback) {
       for(var i = 0; i < info.length; i++) {
         result.push([{
           time: new Date(info[i].commit.committer.date).getTime(),
-          value: 1
+          value: (measurement === 'commit' ? 1 : info[i].commit.message.length)
         }, {
           author: info[i].commit.author.name,
           repo: repo
