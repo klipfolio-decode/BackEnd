@@ -9,6 +9,6 @@ var app = express();
 app.use(bodyParser.json());
 app.get('/hardcoded-data', controller.retrieveData);
 
-app.get('/data/:datasource/:type',controller.getData);
+app.get('/data/:datasource/:measurement',controller.retrieveData);
 app.get('/sample_data',controller.sampleData);
 app.listen(8080);
