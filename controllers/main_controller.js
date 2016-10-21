@@ -38,6 +38,7 @@ module.exports.retrieveData = function (req,res){
       for(var i = 0; i< array.length; ++i){
           formattedResult.push({'time': new Date(array[i].time).getTime(), 'data' :array[i].sum});
       }
+      res.header('Access-Control-Allow-Origin', 'http://localhost:9000');
       res.status(200).json({'error' : err, 'data' : formattedResult});
     }
   });
