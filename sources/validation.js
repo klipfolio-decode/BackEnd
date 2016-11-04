@@ -1,4 +1,3 @@
-
 var schema = require('./schema.js');
 
 module.exports.validate = function(req) {
