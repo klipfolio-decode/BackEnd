@@ -2,9 +2,9 @@
   "name": "klipfolio",
   "version": "1.0.0",
   "description": "BackEnd of Klipfolio Decode Project",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -16,7 +16,10 @@
   "dependencies": {
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
-    "influx": "^4.2.3",
-    "moment": "^2.15.1"
+    "influx": "^5.0.0-alpha.4",
+    "moment": "^2.15.1",
+    "request": "^2.78.0",
+    "request-promise": "^4.1.1",
+    "timeseries-analysis": "^1.0.12"
   }
 }
