@@ -1,39 +1,51 @@
-var shaman = require('shaman');
+var timeseries = require('timeseries-analysis');
 
-module.exports.linearRegression = function(list, res){
-  // console.log(realData[0].data[1].data);
-  var parsedValues = [];
-  var parsedDates = [];
-  var parsedTimeStamps = [];
-  var input = list;
-  var output = {"error": null, "data": []};
-  for (var i = 0; i < input.length; i++) {
-    parsedValues.push(input[i].data);
+
+module.exports.analysis = function(req, res){
+  console.log(req.body);
+  var data = req.body.data;
+
+  var formatData = [];
+
+  for (var i = 0; i < data.length; i++) {
+
+    formatData.push({
+      time : new Date(data[i].time),
+      data : data[i].sum
+    });
   }
-  for (var i = 0; i < input.length; i++) {
-    parsedTimeStamps.push(input[i].time);
-    parsedDates.push(i);
+
+  console.log(formatData);
+
+  var t = new timeseries.main(timeseries.adapter.fromDB(formatData, {
+    date: 'time',
+    value: 'data'
+  }));
+
+
+  t.smoother({period:4}).save('smoothed');
+  var bestSettings = t.regression_forecast_optimize();
+
+  if (bestSettings === undefined){
+    res.status(416).json({error: 'Sample size too small', data: null});
   }
-  console.log(parsedValues);
-  console.log(parsedDates);
-  var x = parsedDates;
-  var y = parsedValues;
-  var lr = new shaman.LinearRegression(x, y);
-  lr.train(function(err) {
-    if (err) {
-      throw err;
-    }
-    // you can now start using lr.predict:
-    for(var i = 0; i < parsedDates.length; i++) {
-        output.data.push(
-          {"time": parsedTimeStamps[i],
-           "data": lr.predict(i)
-          });
-    }
-    console.log(output);
 
-    console.log("return analysis result");
-    res.status(200).json(output);
-
+  //console.log(bestSettings);
+  // Apply those settings to forecast the n+1 value
+  t.sliding_regression_forecast({
+      sample:		bestSettings.sample,
+      degree: 	bestSettings.degree,
+      method: 	bestSettings.method
   });
-};
+  var chart_url = t.chart({main:false,points:[{color:'FFFFFF',point:bestSettings.sample,serie:0}]});
+
+  var formattedResult = [];
+  for (var i = 0; i < t.data.length; i++){
+    formattedResult.push({
+      'time' : t.data[i][0],
+      'data' : t.data[i][1]
+    });
+  }
+
+  res.status(200).json({error: null, data:formattedResult});
+}

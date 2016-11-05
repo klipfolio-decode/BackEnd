@@ -1,66 +1,71 @@
-/*
-* This module is the endpoint definition for time series data.
+/**
+* This module is the endpoint definition for the time series data
 */
 
-var model = require('../influx/query.js');
+var query = require('../influx/query.js');
 var schema = require('../sources/schema.js');
-var analysis = require("../analytics/analysis.js");
 var validation = require('../sources/validation.js');
 
-
-module.exports.retrieveData = function (req,res) {
+module.exports.retrieveData = function (req,res){
   var datasource = req.params.datasource;
   var measurement = req.params.measurement;
 
-  var queryError = validation.validate(req);
+  var validateQuery = validation.validate(req);
 
-  // Validates query
-  if (queryError) {
-    res.status(418).json({error: queryError, data: null});
+  // Validate the data
+  if (validateQuery){
+    // teapot??
+    res.header('Access-Control-Allow-Origin', 'http://localhost:9000');
+    res.status(418).json({'error' : validateQuery, 'data' : null });
   } else {
 
-    var start = req.query.start;
-    var end = req.query.end;
-    var interval = req.query.interval;
-    var analysisType = req.query.analysis;
+    var requiredFilters = {};
+    var optionalFilters = {};
 
-    var filters = {};
+    var requiredFilter = schema.datasources[datasource].measurements[measurement].filter.required;
+    var optionalFilter = schema.datasources[datasource].measurements[measurement].filter.optional;
 
-    var requiredFilters = schema.datasources[datasource].measurements[measurement].filter.required;
-    var optionalFilters = schema.datasources[datasource].measurements[measurement].filter.optional;
-
-    for(var i = 0; i < requiredFilters.length; i++) {
-        filters[requiredFilters[i]] = req.query[requiredFilters[i]];
+    for(var i=0; i<requiredFilter.length; i++){
+      requiredFilters[requiredFilter[i]] = req.query[requiredFilter[i]];
     }
 
-    for(var i = 0; i < optionalFilters.length; i++) {
-      if (req.query[optionalFilters[i]]) {
-        filters[optionalFilters[i]] = req.query[optionalFilters[i]];
-      }
+    for(var i=0; i<optionalFilter.length; i++){
+      optionalFilters[optionalFilter[i]] = req.query[optionalFilter[i]];
     }
 
-    console.log(filters);
+    var params = {};
+    params.datasource = datasource;
+    params.measurement = measurement;
+    params.start = req.query.start;
+    params.end = req.query.end;
+    params.interval = req.query.interval;
+    params. requiredFilters = requiredFilters;
+    params.optionalFilters = optionalFilters;
 
-    model.getData(datasource, measurement, start, end, interval,filters, function(err,results) {
-      if(err) {
-        res.status(400).json({error : err, data : null});
+    query.checkDataSourceExists(datasource).then(exists => {
+      if (exists){
+        query.storeData(params).then(() => {
+          query.fetchData(params).then(points => {
+             res.status(200).json(points);
+          });
+        });
       } else {
-
-        formattedResult = [];
-        var array = results[0];
-        for(var i = 0; i< array.length; ++i){
-            formattedResult.push({'time': new Date(array[i].time).getTime(), data : array[i].sum});
-        }
-        if (analysisType == "lr") {
-          console.log("start analysis");
-          analysis.linearRegression(formattedResult, res);
-        } else {
-          res.header('Access-Control-Allow-Origin', 'http://localhost:9000');
-          res.status(200).json({'error' : err, 'data' : formattedResult});
-        }
+        query.createDatabase(datasource).then( () => {
+          query.storeData(params).then(() => {
+            query.fetchData(params).then(points => {
+               res.status(200).json(points);
+            });
+          });
+        });
       }
     });
   }
+};
+
+module.exports.postData = function(req, res){
+  console.log(JSON.stringify(req.body, null, ' '));
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.status(200).json({error: null, data: JSON.stringify(req.body, null, ' ')});
 }
 
 module.exports.datasources = function(req, res) {
