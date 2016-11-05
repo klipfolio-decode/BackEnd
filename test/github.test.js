@@ -7,7 +7,7 @@ var should = chai.should();
 var server = 'http://localhost:8080';
 chai.use(chaiHttp);
 
-describe('Query data using GitHub API', function(){
+describe('Query data using GitHub API with correct params', function(){
   var query;
 
   beforeEach(function(){
@@ -34,6 +34,18 @@ describe('Query data using GitHub API', function(){
         point.should.have.property('fields').not.empty;
         point.should.have.property('timestamp').to.not.be.null;
       });
+      done();
+    });
+  });
+});
+
+describe('Query data using GitHub API with incorrect params', function(){
+  it('Should return 404 from incorrect repo format', function(done){
+    var measurement = 'commit';
+    var repo = 'fail';
+
+    github.queryGithubData(measurement, repo).catch(error => {
+      error.statusCode.should.equal(404);
       done();
     });
   });
