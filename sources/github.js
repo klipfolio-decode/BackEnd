@@ -13,8 +13,11 @@ function createOptions(repo) {
   return {
     url: ENDPOINT + repo + '/commits',
     headers: {
-      'Authorization': 'token ' + config.githubKey, // Bens access token
-      'user-agent': 'Klipfolio-Decode-2016-Fall'
+      // Do we really need the token to retrieve public info from a users github??
+      //'Authorization': 'token ' + config.githubKey, // Bens access token
+      'user-agent': 'Klipfolio-Decode-2016-Fall',
+      'Accept': 'application/vnd.github.v3+json'
+
     }
   };
 };

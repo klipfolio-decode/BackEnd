@@ -9,4 +9,6 @@ install:
 # Start the server to run the tests
 script:
   npm start
+
+after_script:
   npm test
