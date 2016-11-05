@@ -13,7 +13,7 @@ function createOptions(repo) {
   return {
     url: ENDPOINT + repo + '/commits',
     headers: {
-      'Authorization': 'token ' + config.githubKey, // Bens access token
+      //'Authorization': 'token ' + config.githubKey, // Bens access token
       'user-agent': 'Klipfolio-Decode-2016-Fall'
     }
   };
