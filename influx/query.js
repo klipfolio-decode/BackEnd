@@ -54,11 +54,10 @@ module.exports.createDatabase = function(datasource) {
 */
 module.exports.storeData = function(data) {
   // Get GitHub Data
-  var measurement = data[0].measurement;
-  var owner = data[0].requiredFilters.owner;
-  var repo = data[0].requiredFilters.repo;
+  var measurement = data.measurement;
+  var repo = data.requiredFilters.repo;
 
-  return github.queryGithubData(measurement, owner, repo).then(points => {
+  return github.queryGithubData(measurement, repo).then(points => {
     console.log(points);
     client.writePoints(points).catch(err => {
       console.log('Error writing to db: ' + err);
@@ -81,21 +80,21 @@ module.exports.fetchData = function(data) {
   var requiredFilterQuery = '';
   var optionalFilterQuery = '';
 
-  for (var filter in data[0].requiredFilters){
+  for (var filter in data.requiredFilters){
     if (filter !== 'owner'){
-      requiredFilterQuery += "AND " + filter + " = '" + data[0].requiredFilters[filter] + "' ";
+      requiredFilterQuery += "AND " + filter + " = '" + data.requiredFilters[filter] + "' ";
     }
   }
 
-  for (var filter in data[0].optionalFilters){
+  for (var filter in data.optionalFilters){
     if (filter !== 'owner'){
-      optionalFilterQuery += "OR " + filter + " = '" + data[0].optionalFilters[filter] + "' ";
+      optionalFilterQuery += "OR " + filter + " = '" + data.optionalFilters[filter] + "' ";
     }
   }
 
-  var query = 'SELECT sum(value) FROM ' + data[0].measurement +
-              ' WHERE time >= ' + data[0].start + '000000000 and time <= ' + data[0].end + '000000000 ' +
-              requiredFilterQuery + 'group by time(' + data[0].interval + ') fill(0)';
+  var query = 'SELECT sum(value) FROM ' + data.measurement +
+              ' WHERE time >= ' + data.start + '000000000 and time <= ' + data.end + '000000000 ' +
+              requiredFilterQuery + 'group by time(' + data.interval + ') fill(0)';
 
   console.log(query);
 

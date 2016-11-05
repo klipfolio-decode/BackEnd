@@ -9,9 +9,9 @@ var rp = require('request-promise');
 var ENDPOINT = 'https://api.github.com/repos/';
 
 // Options when using GitHub API. Ex. Commits
-function createOptions(owner, repo) {
+function createOptions(repo) {
   return {
-    url: ENDPOINT + owner + '/'+ repo + '/commits',
+    url: ENDPOINT + repo + '/commits',
     headers: {
       'Authorization': 'token ' + config.githubKey, // Bens access token
       'user-agent': 'Klipfolio-Decode-2016-Fall'
@@ -28,9 +28,10 @@ function createOptions(owner, repo) {
 *
 * @returns request promise
 */
-module.exports.queryGithubData = function(measurement, owner, repo){
+module.exports.queryGithubData = function(measurement, repo){
   // Create options for GitHub API
-  var options = createOptions(owner, repo);
+  var options = createOptions(repo);
+
   // Return request promise
   return rp(options).then(res => {
     var formattedResults = [];
@@ -41,7 +42,7 @@ module.exports.queryGithubData = function(measurement, owner, repo){
       var overrideTime = new Date(data[i].commit.committer.date);
       var value = (measurement === 'commit' ? 1 : data[i].commit.message.length);
 
-      console.log(new Date(data[i].commit.committer.date) + '| '+  time  +' |' + value);
+      //console.log(new Date(data[i].commit.committer.date) + '| '+  time  +' |' + value);
 
       formattedResults.push(
         {
@@ -57,41 +58,5 @@ module.exports.queryGithubData = function(measurement, owner, repo){
       )
     }
     return formattedResults;
-  });
-};
-
-
-
-module.exports.queryGitHub = function(measurement, owner, repo, callback) {
-  var options = createOptions(owner, repo);
-  // Make a HTTPS GET request to GitHubs API.
-  request(options, function(error, response, body) {
-    // Check for errors
-    if (error) {
-      callback(error, null);
-    }
-    // Check for correct status code
-    if (response.statusCode !== 200) {
-      callback("Invalid stauts code returned: " + response.statusCode, null);
-    }
-
-    var result = [];
-    var info = JSON.parse(body);
-
-    // Parse the data and add put it into an array.
-    for(var i=0; i <info.length; i++) {
-      result.push(
-        [
-          {
-            time : new Date(info[i].commit.committer.date).getTime(),
-            value: (measurement === 'commit' ? 1 : info[i].commit.message.length)
-          },
-          {
-            author: info[i].commit.author.name,
-            repo: repo
-          }
-        ]);
-    }
-    callback(error, result);
   });
 };

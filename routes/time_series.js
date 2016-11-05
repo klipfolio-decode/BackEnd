@@ -19,8 +19,6 @@ module.exports.retrieveData = function (req,res){
     res.status(418).json({'error' : validateQuery, 'data' : null });
   } else {
 
-    var params = [];
-
     var requiredFilters = {};
     var optionalFilters = {};
 
@@ -35,15 +33,14 @@ module.exports.retrieveData = function (req,res){
       optionalFilters[optionalFilter[i]] = req.query[optionalFilter[i]];
     }
 
-    params.push({
-      datasource : datasource,
-      measurement : measurement,
-      start : req.query.start,
-      end : req.query.end,
-      interval : req.query.interval,
-      requiredFilters : requiredFilters,
-      optionalFilters : optionalFilters
-    });
+    var params = {};
+    params.datasource = datasource;
+    params.measurement = measurement;
+    params.start = req.query.start;
+    params.end = req.query.end;
+    params.interval = req.query.interval;
+    params. requiredFilters = requiredFilters;
+    params.optionalFilters = optionalFilters;
 
     query.checkDataSourceExists(datasource).then(exists => {
       if (exists){

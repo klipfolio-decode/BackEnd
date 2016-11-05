@@ -4,8 +4,7 @@ module.exports.datasources = {
       commitLength: {
         filter: {
           required: [
-            'repo',
-            'owner'
+            'repo'
           ],
           optional: [
             'author'
@@ -15,8 +14,7 @@ module.exports.datasources = {
       commit: {
         filter: {
           required: [
-            'repo',
-            'owner'
+            'repo'
           ],
           optional: [
             'author'
