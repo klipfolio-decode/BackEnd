@@ -1,3 +1,12 @@
 language: node_js
 node_js:
   - "4"
+
+# Make sure that we have all the dependanices to build
+install:
+  npm install
+
+# Start the server to run the tests
+script:
+  npm start
+  npm test
