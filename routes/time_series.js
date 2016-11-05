@@ -6,8 +6,6 @@ var query = require('../influx/query.js');
 var schema = require('../sources/schema.js');
 var validation = require('../sources/validation.js');
 
-
-
 module.exports.retrieveData = function (req,res){
   var datasource = req.params.datasource;
   var measurement = req.params.measurement;
@@ -67,13 +65,11 @@ module.exports.retrieveData = function (req,res){
   }
 };
 
-
 module.exports.postData = function(req, res){
   console.log(JSON.stringify(req.body, null, ' '));
   res.header('Access-Control-Allow-Origin', req.headers.origin);
   res.status(200).json({error: null, data: JSON.stringify(req.body, null, ' ')});
 }
-
 
 module.exports.datasources = function(req, res) {
   res.header('Access-Control-Allow-Origin', 'http://localhost:9000');
