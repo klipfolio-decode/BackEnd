@@ -4,11 +4,9 @@ node_js:
 
 # Make sure that we have all the dependanices to build
 install:
-  npm install
+  - npm install
 
 # Start the server to run the tests
 script:
-  npm start
-
-after_script:
-  npm test
+  - npm start &
+  - npm test
