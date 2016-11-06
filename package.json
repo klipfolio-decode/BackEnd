@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "keywords": [
     "#decode",
@@ -21,5 +21,10 @@
     "request": "^2.78.0",
     "request-promise": "^4.1.1",
     "timeseries-analysis": "^1.0.12"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "mocha": "^3.1.2"
   }
 }

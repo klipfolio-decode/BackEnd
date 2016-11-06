@@ -1,5 +1,4 @@
 var schema = require('./schema.js');
-
 module.exports.validate = function(req) {
   if(schema.datasources[req.params.datasource]) {
     if(schema.datasources[req.params.datasource].measurements[req.params.measurement]) {
