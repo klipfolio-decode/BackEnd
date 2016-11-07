@@ -2,10 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 var controller = require('./routes/time_series.js');
-var github = require('./sources/github.js');
-var model = require('./influx/query.js');
 var analytics =require('./analytics/analysis.js');
-var result;
 
 var app = express();
 app.use(bodyParser.json());

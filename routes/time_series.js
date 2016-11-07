@@ -2,9 +2,12 @@
 * This module is the endpoint definition for the time series data
 */
 
-var query = require('../influx/query.js');
+'use strict'
+
 var schema = require('../sources/schema.js');
 var validation = require('../sources/validation.js');
+
+var GithubInfluxAdapter = require('../sources/GithubInfluxAdapter.js').GithubInfluxAdapter;
 
 module.exports.retrieveData = function (req,res){
   var datasource = req.params.datasource;
@@ -42,23 +45,34 @@ module.exports.retrieveData = function (req,res){
     params. requiredFilters = requiredFilters;
     params.optionalFilters = optionalFilters;
 
-    query.checkDataSourceExists(datasource).then(exists => {
-      if (exists){
-        query.storeData(params).then(() => {
-          query.fetchData(params).then(points => {
-             res.status(200).json(points);
-          });
-        });
-      } else {
-        query.createDatabase(datasource).then( () => {
-          query.storeData(params).then(() => {
-            query.fetchData(params).then(points => {
-               res.status(200).json(points);
-            });
-          });
-        });
-      }
-    });
+    var githubInfluxAdapter = new GithubInfluxAdapter(params);
+
+    githubInfluxAdapter.queryGithubData().then( (data) => {
+      githubInfluxAdapter.save(data).then(() => {
+        githubInfluxAdapter.fetch(params).then( (points) => {
+           res.status(200).json({ 'error' : null , 'data' : points})
+        })
+      })
+    })
+
+
+    // query.checkDataSourceExists(datasource).then(exists => {
+    //   if (exists){
+    //     query.storeData(params).then(() => {
+    //       query.fetchData(params).then(points => {
+    //          res.status(200).json(points);
+    //       });
+    //     });
+    //   } else {
+    //     query.createDatabase(datasource).then( () => {
+    //       query.storeData(params).then(() => {
+    //         query.fetchData(params).then(points => {
+    //            res.status(200).json(points);
+    //         });
+    //       });
+    //     });
+    //   }
+    // });
   }
 };
 

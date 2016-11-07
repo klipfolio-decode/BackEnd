@@ -1,6 +1,6 @@
 var chai = require('chai');
 var chaiHttp = require('chai-http');
-var github = require('../sources/github.js');
+var GithubInfluxAdapter = require('../sources/GithubInfluxAdapter.js').GithubInfluxAdapter
 
 var should = chai.should();
 
@@ -8,26 +8,34 @@ var server = 'http://localhost:8080';
 chai.use(chaiHttp);
 
 describe('Query data using GitHub API with correct params', function(){
-  var query;
+  var githubInfluxAdapter;
 
   beforeEach(function(){
-    var repo = 'apple/swift';
-    var measurement = 'commit';
 
-    query = github.queryGithubData(measurement, repo);
+    var params = {
+      datasource: 'github',
+      measurement: 'commit',
+      start: '1475352578',
+      end: '1478376578',
+      interval: '1d',
+      requiredFilters: { repo: 'facebook/react' },
+      optionalFilters: { author: undefined }
+    };
+
+    githubInfluxAdapter = new GithubInfluxAdapter(params);
   });
 
   it('Should return data from GitHub API', function(done){
-    query.then(res => {
-      should.exist(res);
-      res.should.be.array;
-      res.should.be.not.empty;
-      done();
-    });
+    githubInfluxAdapter.queryGithubData().then(res => {
+        should.exist(res);
+        res.should.be.array;
+        res.should.be.not.empty;
+        done();
+      });
   });
 
   it('Should return the data in the correct format to put into InfluxDB', function(done){
-    query.then(res => {
+    githubInfluxAdapter.queryGithubData().then(res => {
       res.forEach(point => {
         point.should.have.property('measurement').not.empty;
         point.should.have.property('tags').not.empty;
@@ -41,13 +49,23 @@ describe('Query data using GitHub API with correct params', function(){
 
 describe('Query data using GitHub API with incorrect params', function(){
   it('Should return 404 from incorrect repo format', function(done){
-    var measurement = 'commit';
-    var repo = 'fail';
 
-    github.queryGithubData(measurement, repo).catch(error => {
+    var params = {
+      datasource: 'github',
+      measurement: 'commit',
+      start: '1475352578',
+      end: '1478376578',
+      interval: '1d',
+      requiredFilters: { repo: 'fail' },
+      optionalFilters: { author: undefined }
+    };
+
+    githubInfluxAdapter = new GithubInfluxAdapter(params);
+
+    githubInfluxAdapter.queryGithubData().then((error) =>{
       error.statusCode.should.equal(404);
       done();
-    });
+    })
   });
 });
 
