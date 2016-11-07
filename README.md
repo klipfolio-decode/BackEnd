@@ -1,4 +1,4 @@
-# Time Series Analysis Server
+# Time Series Analysis Server [![Build Status](https://travis-ci.org/klipfolio-decode/BackEnd.svg?branch=master)](https://travis-ci.org/klipfolio-decode/BackEnd)
 ## Setup:
 
   1. Download influxDB:
